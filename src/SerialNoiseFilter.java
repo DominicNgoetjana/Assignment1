@@ -18,9 +18,26 @@ public class SerialNoiseFilter {
                 line = in.nextLine();
                 data[i] = Double.parseDouble( line.substring( line.indexOf(" ")+1, line.length() ) );
             }
-            //System.out.println( Arrays.toString(data) );
+            //System.out.println( Arrays.toString( generateFilteredArray(data) ) );
         } catch (Exception e) {
         }
+    }
+    
+    public double[] generateFilteredArray( double[] original ) {
+        double[] result = new double[original.length];                          // new, modified data
+        int borderVal = (filterSize-1)/2;                                       // number of elements to exclude on either side
+        for (int i = 0; i < original.length; i++) {
+            if ( (i < borderVal) || (i > (original.length-borderVal-1) ) ) {    // falls within border
+                result[i] = original[i];                                        // copy as is
+            } else {
+                result[i] = medianFilter( Arrays.copyOfRange(original, i-borderVal, i+borderVal+1) ); // generates array of length filterSize, from the left to the right of the current element and returns median
+            }
+        }
+        return result;
+    }
+    
+    public void writeData( double[] newData ) {
+        
     }
     
     public double medianFilter( double[] array ) {
@@ -34,7 +51,9 @@ public class SerialNoiseFilter {
         //snf.filterSize = Integer.parseInt(args[1]);
         //snf.outputFile = args[2];
         //snf.readData();
-        //double[] arr = {15,3,67,43,12};
+        double[] arr = {3, 4, 2, 54, 23, 56, 32}; // 3 , 3, 4, 23, 54, 32, 32
+        snf.filterSize = 3;
+        System.out.println( Arrays.toString( snf.generateFilteredArray(arr) ) );
         //System.out.println("median is " + snf.medianFilter(arr));
     }
 
